@@ -1,5 +1,4 @@
-"use client";
-
+"use client"
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
@@ -37,7 +36,7 @@ export default function DashboardLayout({ children }) {
     return (
         <div className="flex w-full h-screen p-2 gap-2 overflow-hidden">
            
-            <Sidebar></Sidebar>
+            <Sidebar isAdmin={user?.isAdmin}></Sidebar>
             <div className="w-full flex flex-col flex-1 gap-2">
                 <Navbar username={user?.name}></Navbar>
                 <div className="flex-1 bg-stone-100 rounded-xl py-3 px-3 overflow-y-scroll">{children}</div>

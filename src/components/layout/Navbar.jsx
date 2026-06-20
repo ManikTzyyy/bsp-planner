@@ -1,5 +1,3 @@
-"use client"
-
 import { IconUser, IconLogout } from "@tabler/icons-react";
 import {
   DropdownMenu,
@@ -27,7 +25,7 @@ export default function Navbar({ username }) {
           </div>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align="end" className="w-48 mt-1">
+        <DropdownMenuContent align="end" className="w-48 mt-1 bg-white">
           <DropdownMenuLabel className="text-xs text-stone-500 font-normal">
             Account Action
           </DropdownMenuLabel>

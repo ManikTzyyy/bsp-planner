@@ -13,13 +13,13 @@ export function useLogout() {
         setLoading(true);
         try {
             await logoutUser();
-            toast.success("Logout berhasil! Mengalihkan...");
+            toast.success("Logout success! Redirecting...");
             setTimeout(() => {
                 router.push("/login");
                 router.refresh();
             }, 800);
         } catch (error) {
-            toast.error(error.message || "Gagal logout, coba lagi.");
+            toast.error(error.message || "Failed to logout, Try Again.");
         } finally {
             setLoading(false);
         }

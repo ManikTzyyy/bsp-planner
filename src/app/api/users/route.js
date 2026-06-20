@@ -1,10 +1,24 @@
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
+import jwt from "jsonwebtoken"
+
 import { createUser } from "@/repositories/user.repository";
 
 export async function POST(req) {
   try {
+    const token = req.cookies.get("session")?.value
+
+    if (!token) {
+      return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+
+    if (!decoded.isAdmin) {
+      return NextResponse.json({ success: false, message: "Forbidden bruh!" }, { status: 403 });
+    }
     const body = await req.json();
 
     const hash = await bcrypt.hash(body.password, 10);
@@ -15,7 +29,7 @@ export async function POST(req) {
       name: body.name,
       id_branch: body.id_branch ? Number(body.id_branch) : null,
       isAdmin: body.isAdmin,
-      role : body.role
+      id_role: body.id_role
     });
 
     return NextResponse.json({
@@ -23,14 +37,10 @@ export async function POST(req) {
       data: user,
     });
   } catch (err) {
-    return NextResponse.json(
-      {
-        success: false,
-        message: err.message,
-      },
-      {
-        status: 500,
-      },
-    );
+    if (err.name === "JsonWebTokenError" || err.name === "TokenExpiredError") {
+      return NextResponse.json({ success: false, message: "Invalid or expired token" }, { status: 401 });
+    }
+    // console.error("Error create user:", err);
+    return NextResponse.json({ success: false, message: "Internal Server Error" }, { status: 500 });
   }
 }
