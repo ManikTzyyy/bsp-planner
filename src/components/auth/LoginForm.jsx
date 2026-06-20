@@ -1,7 +1,7 @@
 "use client";
 
 import InputForm from "../ui/InputForm";
-import Button from "../ui/Button";
+import MyButton from "../ui/MyButton";
 import Link from "next/link";
 import { useState } from "react";
 import { useLogin } from "@/hooks/useLogin";
@@ -58,7 +58,7 @@ export default function LoginForm() {
       <div className="pt-3"></div>
 
 
-      <Button
+      <MyButton
         label={loading ? "Loading..." : "Login"}
         id="login"
         variant={loading ? "disable" : "primary"}
