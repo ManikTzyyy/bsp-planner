@@ -32,7 +32,7 @@ export async function POST(req) {
       return NextResponse.json(
         {
           success: false,
-          message: "Password is Wrong",
+          message: "Password is wrong bruh!",
         },
         { status: 401 }
       );
@@ -43,6 +43,7 @@ export async function POST(req) {
         id: user.id,
         username: user.username,
         name: user.name,
+        id_branch: user.id_branch,
         isAdmin: user.isAdmin,
         isOwner: user.isOwner,
       },
