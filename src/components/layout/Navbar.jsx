@@ -10,19 +10,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export default function Navbar({ username }) {
-  const handleLogout = () => {
-    console.log("User logged out");
-  };
+import { useLogout } from "@/hooks/useLogout";
 
+export default function Navbar({ username }) {
+  const { logout, loading } = useLogout()
+  
   return (
     <div className="bg-stone-100 rounded-xl py-3 px-3 flex justify-end">
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex items-center gap-2 cursor-pointer select-none focus:outline-none hover:opacity-80 transition">
+        <DropdownMenuTrigger className="flex items-center gap-2 cursor-pointer select-none focus:outline-none hover:opacity-80 transition disabled:opacity-50" disabled={loading}>
           <p className="text-sm text-stone-900">
             Hi, {username || "Guest"}
           </p>
-
           <div className="bg-blue-100 w-8 h-8 rounded-full flex items-center justify-center">
             <IconUser className="text-blue-500 w-5 h-5" />
           </div>
@@ -33,13 +32,14 @@ export default function Navbar({ username }) {
             Account Action
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          
-          <DropdownMenuItem 
-            onClick={handleLogout}
+
+          <DropdownMenuItem
+            onClick={logout} // Eksekusi di sini
+            disabled={loading}
             className="cursor-pointer focus:bg-blue-50 flex items-center gap-2"
           >
             <IconLogout className="w-4 h-4" />
-            <span>Log Out</span>
+            <span>{loading ? "Logging out..." : "Log Out"}</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

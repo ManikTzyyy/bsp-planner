@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Sidebar from "@/components/layout/Sidebar";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 
 
 export default function DashboardLayout({ children }) {
@@ -36,7 +36,7 @@ export default function DashboardLayout({ children }) {
     }, [errorType]);
     return (
         <div className="flex w-full h-screen p-2 gap-2 overflow-hidden">
-            <Toaster position="top-center" richColors />
+           
             <Sidebar></Sidebar>
             <div className="w-full flex flex-col flex-1 gap-2">
                 <Navbar username={user?.name}></Navbar>
