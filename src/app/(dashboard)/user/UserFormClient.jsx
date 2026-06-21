@@ -38,7 +38,7 @@ export default function UserFormClient({ dbRoles = [], dbBranches = [], currentU
 
         setLoading(true);
         try {
-            const apiUrl = isEditMode ? `/api/user/edit/${currentUser.id}` : "/api/user/add";
+            const apiUrl = isEditMode ? `/api/user/${currentUser.id}` : "/api/user";
             const apiMethod = isEditMode ? "PUT" : "POST";
 
             const res = await fetch(apiUrl, {

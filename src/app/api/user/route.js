@@ -1,9 +1,23 @@
-import bcrypt from "bcryptjs";
+// src/app/api/users/route.js
 import { NextResponse } from "next/server";
+import { getUsersPaginated, createUser } from "@/repositories/user.repository";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
-import jwt from "jsonwebtoken"
+export async function GET(req) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const page = Number(searchParams.get("page")) || 1;
+    const limit = Number(searchParams.get("limit")) || 10;
+    const search = searchParams.get("search") || "";
+   
+    const result = await getUsersPaginated({ page, limit, search });
 
-import { createUser } from "@/repositories/user.repository";
+    return NextResponse.json({ success: true, ...result });
+  } catch (error) {
+    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+  }
+}
 
 export async function POST(req) {
   try {
@@ -37,6 +51,7 @@ export async function POST(req) {
       data: user,
     });
   } catch (err) {
+    console.error("🔥 Error di POST /api/user:", err);
     if (err.name === "JsonWebTokenError" || err.name === "TokenExpiredError") {
       return NextResponse.json({ success: false, message: "Invalid or expired token" }, { status: 401 });
     }
