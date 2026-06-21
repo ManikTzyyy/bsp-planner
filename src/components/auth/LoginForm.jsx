@@ -1,6 +1,6 @@
 "use client";
 import InputForm from "../ui/InputForm";
-import MyButton from "../ui/MyButton";
+import {MyButton} from "../ui/MyButton";
 import Link from "next/link";
 import { useState } from "react";
 import { useLogin } from "@/hooks/useLogin";

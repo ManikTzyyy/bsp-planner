@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import { redirect } from "next/navigation";
 import { getAllRole } from "@/repositories/role.repository"; // Sesuaikan path repo lo
-import UserCreateClient from "./UserCreateClient";
+import UserFormClient from "../UserFormClient";
 import { getAllBranches } from "@/repositories/branch.repository";
 
 export default async function Page() {
@@ -21,7 +21,7 @@ export default async function Page() {
     const branches = await getAllBranches()
 
 
-    return <UserCreateClient dbRoles={roles} dbBranches={branches} />;
+    return <UserFormClient dbRoles={roles} dbBranches={branches} />;
   } catch (error) {
     redirect("/login");
   }
