@@ -18,8 +18,6 @@ export const getAllPlans = async ({
     area 
 }) => {
 
-    console.log({ areaGroup, area })
-
     const from = (page - 1) * limit;
     const to = from + limit - 1;
 
@@ -95,4 +93,17 @@ export const getAllPlans = async ({
         totalData: count,
         totalPages: Math.ceil(count / limit),
     };
+};
+
+export const updatePlan = async (id, updateData) => {
+    const { data, error } = await supabase
+        .from("plan")
+        .update(updateData)
+        .eq("id", id)        
+        .select()
+        .single();
+
+    if (error) throw error;
+
+    return data;
 };

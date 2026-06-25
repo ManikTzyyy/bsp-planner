@@ -88,16 +88,6 @@ body {
   background-color: var(--bg);
 }
 
-.li-active::before {
-  content: "";
-  width: 5px;
-  height: 30px;
-  background-color: #2b7fff;
-
-  position: absolute;
-  left: 8px;
-  border-radius: 0 5px 5px 0;
-}
 
 
 
