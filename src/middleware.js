@@ -6,7 +6,7 @@ export async function middleware(req) {
 
   if (!token) {
     return NextResponse.redirect(
-      new URL("/login", req.url)
+      new URL("/login?error=session_missing", req.url)
     );
   }
 
@@ -20,16 +20,17 @@ export async function middleware(req) {
       secret
     );
 
-
-
-
     return NextResponse.next();
   } catch (err) {
     console.error("JWT ERROR:", err);
-
-    return NextResponse.redirect(
-      new URL("/login", req.url)
+    const response = NextResponse.redirect(
+      new URL("/login?error=session_invalid", req.url)
     );
+    response.cookies.set("session", "", {
+      maxAge: 0,
+      path: "/",
+    });
+    return response;
   }
 }
 
