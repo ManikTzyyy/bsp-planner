@@ -8,19 +8,7 @@ import { toast } from "sonner"
 import { Spinner } from "@/components/ui/spinner"
 import { IconClipboardPlus, IconEdit, IconTrash } from "@tabler/icons-react"
 import Link from "next/link"
-
-import {
-    AlertDialog,
-    AlertDialogTrigger,
-    AlertDialogContent,
-    AlertDialogHeader,
-    AlertDialogMedia,
-    AlertDialogTitle,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogCancel,
-    AlertDialogAction,
-} from "@/components/ui/alert-dialog";
+import { DeleteConfirmDialog } from "@/components/ui/DeleteConfirmDialog"
 
 
 export default function PlanDetail() {
@@ -115,34 +103,12 @@ export default function PlanDetail() {
                             <div>
                                 <h1 className="text-stone-400 font-bold">Detail Plan</h1></div>
                             <div className="flex gap-2">
-                                <AlertDialog>
-                                    <AlertDialogTrigger asChild>
-                                        <MyButton iconOnly icon={IconTrash} variant="danger" />
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent size="sm">
-                                        <AlertDialogHeader>
-                                            <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
-                                                <IconTrash size={20} />
-                                            </AlertDialogMedia>
-
-                                            <AlertDialogTitle>Delete User</AlertDialogTitle>
-                                            <AlertDialogDescription>
-                                                Are you sure you want to delete this plan ?
-                                            </AlertDialogDescription>
-                                        </AlertDialogHeader>
-
-                                        <AlertDialogFooter>
-                                            <AlertDialogCancel variant="outline">
-                                                Cancel
-                                            </AlertDialogCancel>
-                                            <AlertDialogAction
-                                                variant="destructive"
-                                                onClick={() => handleDelete(plan.id, plan.user.id)}>
-                                                Delete
-                                            </AlertDialogAction>
-                                        </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                </AlertDialog>
+                                <DeleteConfirmDialog
+                                    title="Delete Plan"
+                                    description="Are you sure you want to delete this plan?"
+                                    onConfirm={() => handleDelete(plan.id, plan.user.id)}
+                                    trigger={<MyButton iconOnly icon={IconTrash} variant="danger" />}
+                                />
                                 <Link href={`/plan/edit?id=${plan.id}`}>
                                     <MyButton
                                         icon={IconEdit}

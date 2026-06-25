@@ -16,8 +16,7 @@ import Link from "next/link"
 import { IconEdit, IconTrash, IconChevronLeft, IconChevronRight } from "@tabler/icons-react"
 
 import { useAuth } from "@/context/AuthContext"
-
-import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogMedia, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog"
+import { DeleteConfirmDialog } from "@/components/ui/DeleteConfirmDialog"
 
 export default function Users() {
     const [users, setUsers] = useState([])
@@ -171,36 +170,16 @@ export default function Users() {
                                                     <MyButton iconOnly icon={IconEdit} variant="warning"></MyButton>
                                                 </Link>
 
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger asChild>
-                                                        <MyButton iconOnly icon={IconTrash} variant="danger" />
-                                                    </AlertDialogTrigger>
-
-                                                    <AlertDialogContent size="sm">
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
-                                                                <IconTrash size={20} />
-                                                            </AlertDialogMedia>
-
-                                                            <AlertDialogTitle>
-                                                                Delete User
-                                                            </AlertDialogTitle>
-                                                            <AlertDialogDescription>
-                                                                Are you sure you want to delete <span className="font-semibold text-stone-800">"{user.name}"</span>?
-                                                            </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
-                                                            <AlertDialogAction
-                                                                variant="destructive"
-                                                                onClick={() => handleDelete(user.id, user.name)}
-                                                            >
-                                                                Delete
-                                                            </AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
+                                                <DeleteConfirmDialog
+                                                    title="Delete User"
+                                                    description={
+                                                        <>
+                                                            Are you sure you want to delete <span className="font-semibold text-stone-800">"{user.name}"</span>?
+                                                        </>
+                                                    }
+                                                    onConfirm={() => handleDelete(user.id, user.name)}
+                                                    trigger={<MyButton iconOnly icon={IconTrash} variant="danger" />}
+                                                />
                                             </div>
                                         </TableCell>
                                     )}
