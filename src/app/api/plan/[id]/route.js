@@ -1,4 +1,4 @@
-import { getPlanById, updatePlan } from "@/repositories/plan.repository";
+import { getPlanById, updatePlan, deletePlan } from "@/repositories/plan.repository";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
@@ -70,6 +70,58 @@ export const PUT = async (req) => {
         return NextResponse.json(
             { success: false, message: error.message },
             { status: 500 }
+        );
+    }
+}
+
+export async function DELETE(req) {
+    try {
+        const token = req.cookies.get("session")?.value;
+        if (!token) {
+            return NextResponse.json(
+                { success: false, message: "Unauthorized" },
+                { status: 401 },
+            );
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        try {
+            jwt.verify(token, process.env.JWT_SECRET);
+        } catch (error) {
+            return NextResponse.json(
+                { success: false, message: "Invalid session" },
+                { status: 401 },
+            );
+        }
+
+        const body = await req.json();
+        const { id_plan, id_user_plan } = body;
+
+        if (!id_plan) {
+            return NextResponse.json(
+                { success: false, message: "Plan ID is required" },
+                { status: 400 },
+            );
+        }
+
+        if (id_user_plan != decoded.id) {
+            return NextResponse.json(
+                { success: false, message: "Unauthorized" },
+                { status: 401 },
+            );
+        }
+
+        const reqdeletePlan = await deletePlan(id_plan);
+        return NextResponse.json({
+            success: true,
+            message: "Plan deleted successfully",
+            plan: reqdeletePlan,
+        });
+    } catch (error) {
+        return NextResponse.json(
+            { success: false, message: error.message },
+            { status: 500 },
         );
     }
 }

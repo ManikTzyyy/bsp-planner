@@ -139,3 +139,16 @@ export const updatePlan = async (id, updateData) => {
 
     return data;
 };
+
+export const deletePlan = async (id) => {
+    const { data, error } = await supabase
+        .from("plan")
+        .delete()
+        .eq("id", id)
+        .select()
+        .single();
+
+    if (error) throw error;
+
+    return data;
+};
