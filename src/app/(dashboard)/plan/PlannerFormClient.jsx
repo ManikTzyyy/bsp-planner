@@ -104,7 +104,7 @@ export default function PlannerFormClient({ currentPlan = null }) {
             <div className="flex justify-between items-center border-b pb-3">
                 <div className="font-semibold text-stone-800">{isEditMode ? "Edit Plan" : "Add Plan"}</div>
                 <div className=" flex gap-2 flex-wrap">
-                    <Link href="/plan"><MyButton label="back" /></Link>
+                    <Link href={isEditMode ? `/plan/detail?id=${currentPlan.id}` : "/plan"}><MyButton label="back" /></Link>
                     <MyButton
                         label={loading ? "processing..." : isEditMode ? "update" : "submit"}
                         onClick={save}

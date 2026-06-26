@@ -56,7 +56,7 @@ function DashboardLayoutContent({ children }) {
     }
     return (
         <AuthContext.Provider value={{ currentUser: user }}>
-            <div className="flex flex-col gap-2 bg-lime-50">
+            <div className="flex flex-col gap-2 bg-stone-200">
 
 
                 <div className="fixed w-full shadow-sm rounded-b-xl bg-white top-0 z-50">
