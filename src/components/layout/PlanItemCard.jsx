@@ -2,11 +2,13 @@ import React, { useState } from "react"
 import { MyButton } from "@/components/ui/MyButton"
 import { formatDate } from "@/lib/utils"
 import { toast } from "sonner"
-import { IconClock, IconEdit, IconTrash } from "@tabler/icons-react"
+import { IconClock, IconEdit, IconTrash, IconCheck, IconX } from "@tabler/icons-react"
 import { DeleteConfirmDialog } from "../ui/DeleteConfirmDialog"
 import imageCompression from "browser-image-compression"
 
 import PhotoSelector from "@/components/ui/PhotoSelector"
+import { Spinner } from "../ui/spinner"
+import { useRouter } from "next/navigation"
 
 
 const getStatusStyles = (status) => {
@@ -28,6 +30,8 @@ const getStatusLabel = (status) => {
 }
 
 export default function PlanItemCard({ id_user_plan, item, isExpanded, onToggle, onEdit, onDelete, onRefresh }) {
+
+    const router = useRouter()
     const [uploadingBefore, setUploadingBefore] = useState(false)
     const [uploadingAfter, setUploadingAfter] = useState(false)
 
@@ -35,6 +39,8 @@ export default function PlanItemCard({ id_user_plan, item, isExpanded, onToggle,
     const [tempAfterFile, setTempAfterFile] = useState(null)
     const [previewBefore, setPreviewBefore] = useState(null)
     const [previewAfter, setPreviewAfter] = useState(null)
+
+    const [isLoading, setIsLoading] = useState(false)
 
 
     const imageBefore = item.images?.find(img => img.image_type === 'before') || null
@@ -163,6 +169,36 @@ export default function PlanItemCard({ id_user_plan, item, isExpanded, onToggle,
             setUploadingAfter(false)
         }
     }
+
+
+    const handleUpdateStatus = async (status) => {
+
+        setIsLoading(true)
+        try {
+            const res = await fetch(`/api/plan/item/status/${item.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    id: item.id,
+                    status: status
+                }),
+            })
+
+            const data = await res.json()
+            if (!res.ok || !data.success) {
+                throw new Error(data.message || "Failed to update status")
+            }
+            toast.success("Item updated successfully")
+            router.refresh()
+
+        } catch (error) {
+            toast.error("Update status failed", { description: error.message })
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+
     return (
         <div
             onClick={onToggle}
@@ -225,8 +261,6 @@ export default function PlanItemCard({ id_user_plan, item, isExpanded, onToggle,
                                     <div className="mt-1 text-sm text-stone-800 leading-6 whitespace-pre-wrap">{item.description}</div>
                                 </div>
 
-                            </div>
-                            <div className="space-y-4">
                                 <div className="rounded-xl bg-stone-50 p-4">
                                     <div className="text-xs text-stone-400">Marked By</div>
                                     <div className="mt-1 text-sm font-medium text-stone-900">{item.marked_by || "Not marked yet"}</div>
@@ -237,6 +271,9 @@ export default function PlanItemCard({ id_user_plan, item, isExpanded, onToggle,
                                         {item.marked_at ? formatDate(item.marked_at, true) : "Not marked yet"}
                                     </div>
                                 </div>
+
+                            </div>
+                            <div className="space-y-4">
                                 <div className="rounded-xl bg-stone-50 p-4">
                                     <div className="text-xs text-stone-400 mb-2">Documentation Photos</div>
                                     <div className="grid grid-cols-1 gap-4">
@@ -266,6 +303,17 @@ export default function PlanItemCard({ id_user_plan, item, isExpanded, onToggle,
                                         />
                                     </div>
 
+                                </div>
+
+                                <div className="rounded-xl bg-stone-50 p-4">
+                                    <div className="text-xs text-stone-400">
+                                        {isLoading ? <div className="flex gap-2">Changing status <span><Spinner /></span></div> : <div>Change Status</div>}
+                                    </div>
+                                    <div className="flex h-fit gap-2 pt-2">
+                                        <MyButton iconOnly icon={IconCheck} variant={item.status == "completed" || isLoading ? "disable" : "success"} onClick={() => handleUpdateStatus('completed')} />
+                                        <MyButton iconOnly icon={IconX} variant={item.status == "uncompleted" || isLoading ? "disable" : "danger"} onClick={() => handleUpdateStatus('uncompleted')} />
+                                        <MyButton iconOnly icon={IconClock} variant={item.status == "pending" || isLoading ? "disable" : "warning"} onClick={() => handleUpdateStatus('pending')} />
+                                    </div>
                                 </div>
                             </div>
                         </div>

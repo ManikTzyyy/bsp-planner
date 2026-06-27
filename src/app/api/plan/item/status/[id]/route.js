@@ -10,6 +10,10 @@ export const PUT = async (req) => {
         const body = await req.json()
         const { id, ...data } = body
 
+        if(user.role?.role != "area"){
+             return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
+        }
+
 
         if (!id) {
             return NextResponse.json({ success: false, message: "Item ID is required" }, { status: 400 });
