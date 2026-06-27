@@ -31,7 +31,11 @@ export const getPlanById = async (id) => {
                     area
                 )
             ),
-            items: plan_item(*, images: plan_images(*))
+            items:plan_item(
+                *,
+                marked_by:users(name),
+                images:plan_images(*)
+))
                 
         `)
         .eq("id", id).order('time', { foreignTable: 'plan_item', ascending: true })

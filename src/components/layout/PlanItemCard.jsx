@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { MyButton } from "@/components/ui/MyButton"
-import { formatDate } from "@/lib/utils"
+import { formatDate, formatTime } from "@/lib/utils"
 import { toast } from "sonner"
 import { IconClock, IconEdit, IconTrash, IconCheck, IconX } from "@tabler/icons-react"
 import { DeleteConfirmDialog } from "../ui/DeleteConfirmDialog"
@@ -9,7 +9,7 @@ import imageCompression from "browser-image-compression"
 import PhotoSelector from "@/components/ui/PhotoSelector"
 import { Spinner } from "../ui/spinner"
 import { useRouter } from "next/navigation"
-
+import { useAuth } from "@/context/AuthContext"
 
 const getStatusStyles = (status) => {
     switch (status) {
@@ -30,6 +30,8 @@ const getStatusLabel = (status) => {
 }
 
 export default function PlanItemCard({ id_user_plan, item, isExpanded, onToggle, onEdit, onDelete, onRefresh, showAction }) {
+
+    const { currentUser } = useAuth()
 
     const router = useRouter()
     const [uploadingBefore, setUploadingBefore] = useState(false)
@@ -180,7 +182,9 @@ export default function PlanItemCard({ id_user_plan, item, isExpanded, onToggle,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     id: item.id,
-                    status: status
+                    status: status,
+                    marked_by: currentUser.id,
+                    marked_at: new Date()
                 }),
             })
 
@@ -265,12 +269,15 @@ export default function PlanItemCard({ id_user_plan, item, isExpanded, onToggle,
 
                                 <div className="rounded-xl bg-stone-50 p-4">
                                     <div className="text-xs text-stone-400">Marked By</div>
-                                    <div className="mt-1 text-sm font-medium text-stone-900">{item.marked_by || "Not marked yet"}</div>
+                                    <div className="mt-1 text-sm font-medium text-stone-900">{item.marked_by.name || "Not marked yet"}</div>
                                 </div>
                                 <div className="rounded-xl bg-stone-50 p-4">
                                     <div className="text-xs text-stone-400">Marked At</div>
                                     <div className="mt-1 text-sm font-medium text-stone-900">
                                         {item.marked_at ? formatDate(item.marked_at, true) : "Not marked yet"}
+                                    </div>
+                                    <div className="mt-1 text-xs text-stone-400">
+                                        {item.marked_at ? formatTime(item.marked_at) : ""}
                                     </div>
                                 </div>
 

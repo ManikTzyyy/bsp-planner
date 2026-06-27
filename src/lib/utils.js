@@ -25,3 +25,18 @@ export const formatDate = (dateString, withDay = false) => {
 
   return new Intl.DateTimeFormat("id-ID", options).format(date);
 };
+
+export const formatTime = (dateString) => {
+  if (!dateString) return "-";
+
+  const date = new Date(dateString);
+
+  if (isNaN(date.getTime())) return "-";
+
+  return new Intl.DateTimeFormat("id-ID", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).format(date);
+};
