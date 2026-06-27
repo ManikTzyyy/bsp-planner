@@ -2,8 +2,9 @@ import React from "react"
 import Link from "next/link"
 import { MyButton } from "@/components/ui/MyButton"
 import { formatDate } from "@/lib/utils"
-import { IconEdit, IconTrash } from "@tabler/icons-react"
+import { IconEdit, IconTrash, IconClipboardText, IconProgressCheck, IconProgressX, IconProgressHelp, IconAward } from "@tabler/icons-react"
 import { DeleteConfirmDialog } from "../ui/DeleteConfirmDialog"
+import StatusCard from "../ui/StatusCard"
 
 export default function PlanHeaderCard({ plan, onDelete, showAction }) {
     return (
@@ -55,10 +56,12 @@ export default function PlanHeaderCard({ plan, onDelete, showAction }) {
                 </div>
             </div>
 
-            <div className="flex justify-between text-xs text-stone-400 pt-10 flex-wrap gap-2">
-                <div>Total Task <span className="block text-lg text-stone-900">0</span></div>
-                <div>Total Completed <span className="block text-lg text-green-900">0/0</span></div>
-                <div>Total Points <span className="block text-lg text-blue-900">0</span></div>
+            <div className="grid grid-cols-2 pt-5 gap-2">
+                <StatusCard label="Task" Icon={IconClipboardText} data={plan.totalTask} variant="natural" />
+                <StatusCard label="Completed" Icon={IconProgressCheck} data={plan.totalCompleted} variant="success" />
+                <StatusCard label="Uncompleted" Icon={IconProgressX} data={plan.totalUncompleted} variant="danger" />
+                <StatusCard label="Pending" Icon={IconProgressHelp} data={plan.totalPending} variant="warning" />
+                <StatusCard label="Points" Icon={IconAward } data={plan.totalPoints} variant="sky" />
             </div>
         </div>
     )

@@ -269,7 +269,7 @@ export default function PlanItemCard({ id_user_plan, item, isExpanded, onToggle,
 
                                 <div className="rounded-xl bg-stone-50 p-4">
                                     <div className="text-xs text-stone-400">Marked By</div>
-                                    <div className="mt-1 text-sm font-medium text-stone-900">{item.marked_by.name || "Not marked yet"}</div>
+                                    <div className="mt-1 text-sm font-medium text-stone-900">{item.marked_by?.name || "Not marked yet"}</div>
                                 </div>
                                 <div className="rounded-xl bg-stone-50 p-4">
                                     <div className="text-xs text-stone-400">Marked At</div>

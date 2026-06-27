@@ -157,7 +157,7 @@ export default function Plan() {
                                 </div>
                                 <div>
                                     <span className="block text-[10px] text-stone-400 font-medium tracking-wide">Task</span>
-                                    <span className="font-medium text-stone-700">0/0</span>
+                                    <span className="font-medium text-stone-700">{item.totalItem || 0}/{item.completedItem || 0}</span>
                                 </div>
                             </div>
                         </div>

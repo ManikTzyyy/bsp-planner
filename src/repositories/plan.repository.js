@@ -34,16 +34,37 @@ export const getPlanById = async (id) => {
             items:plan_item(
                 *,
                 marked_by:users(name),
-                images:plan_images(*)
-))
-                
-        `)
+                images:plan_images(*)))`)
+
         .eq("id", id).order('time', { foreignTable: 'plan_item', ascending: true })
         .single();
 
+    const totalTask = data.items.length;
+
+    const totalCompleted = data.items.filter(
+        item => item.status === "completed"
+    ).length;
+
+    const totalUncompleted = data.items.filter(
+        item => item.status === "uncompleted"
+    ).length;
+
+    const totalPending = totalTask - totalCompleted - totalUncompleted;
+
+    const totalPoints =
+        (totalCompleted * 15) +
+        (totalUncompleted * 5);
+
     if (error) throw error;
 
-    return data;
+    return {
+        ...data,
+        totalTask,
+        totalCompleted,
+        totalUncompleted,
+        totalPending,
+        totalPoints,
+    };
 };
 
 export const getAllPlans = async ({
@@ -126,8 +147,42 @@ export const getAllPlans = async ({
 
     if (error) throw new Error(error.message);
 
+    const planIds = data.map(plan => plan.id);
+
+    let summary = {};
+
+    if (planIds.length > 0) {
+        const { data: items, error: itemError } = await supabase
+            .from("plan_item")
+            .select("id_plan, status")
+            .in("id_plan", planIds);
+
+        if (itemError) throw new Error(itemError.message);
+
+        items.forEach(item => {
+            if (!summary[item.id_plan]) {
+                summary[item.id_plan] = {
+                    totalItem: 0,
+                    completedItem: 0,
+                };
+            }
+
+            summary[item.id_plan].totalItem++;
+
+            if (item.status === "completed") {
+                summary[item.id_plan].completedItem++;
+            }
+        });
+    }
+
+    const result = data.map(plan => ({
+        ...plan,
+        totalItem: summary[plan.id]?.totalItem ?? 0,
+        completedItem: summary[plan.id]?.completedItem ?? 0,
+    }));
+
     return {
-        data,
+        data: result,
         totalData: count,
         totalPages: Math.ceil(count / limit),
     };
