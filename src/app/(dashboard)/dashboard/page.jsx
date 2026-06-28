@@ -31,6 +31,7 @@ export default function Dashboard() {
     const [branchData, setBranchData] = useState([]);
     const [areaData, setAreaData] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [efectiveDay, setEfectiveDay] = useState(0)
 
     useEffect(() => {
         getDashboard();
@@ -49,11 +50,16 @@ export default function Dashboard() {
             const areaJson = await areaRes.json();
 
             if (branchJson.success) {
-                const sorted = [...branchJson.data].sort(
-                    (a, b) => b.branch_points - a.branch_points
+                const branches = Array.isArray(branchJson.data)
+                    ? branchJson.data
+                    : [];
+
+                const sorted = branches.sort(
+                    (a, b) => b.branch_score - a.branch_score
                 );
 
                 setBranchData(sorted);
+                setEfectiveDay(branchJson.efective_day)
             } else {
                 setBranchData([]);
             }
@@ -138,7 +144,7 @@ export default function Dashboard() {
     return (
         <div className="space-y-6 rounded-lg bg-white p-6">
 
-            {/* Header */}
+
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
 
                 <div>
@@ -199,6 +205,7 @@ export default function Dashboard() {
             </div>
 
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+
                 {loading ? (
                     Array.from({ length: 4 }).map((_, index) => (
                         <div
@@ -219,7 +226,7 @@ export default function Dashboard() {
                             </div>
 
                             <div className="mt-3 text-4xl font-bold">
-                                {area.total_progress}
+                                {area.total_progress}<span className="text-sm text-stone-500">/{area.total_task}</span>
                             </div>
 
                             <div className="mt-2 text-sm text-muted-foreground">
@@ -230,9 +237,10 @@ export default function Dashboard() {
                 )}
             </div>
 
-            {/* Branch Table */}
-
+     
+            <div>Efective day : <span>{efectiveDay}</span></div>
             <div className="rounded-lg border overflow-hidden">
+
 
                 <Table>
 

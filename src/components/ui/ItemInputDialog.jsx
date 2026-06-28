@@ -59,16 +59,6 @@ export default function ItemInputDialog({
         })
     }
 
-    const openTimePicker = (e) => {
-        const input = e.currentTarget
-
-        if (!input.showPicker) {
-            return
-        }
-
-        e.preventDefault()
-        input.showPicker()
-    }
 
     return (
         <AlertDialog open={currentOpen} onOpenChange={setOpen}>
@@ -86,7 +76,8 @@ export default function ItemInputDialog({
                             name="time"
                             type="time"
                             value={form.time}
-                            onPointerDown={openTimePicker}
+                            placeholder="Input time"
+                            onClick={(e) => e.target.showPicker()}
                             onChange={(e) => setForm((prev) => ({ ...prev, time: e.target.value }))}
                         />
                     </div>

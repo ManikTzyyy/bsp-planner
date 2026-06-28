@@ -1,14 +1,17 @@
 import { supabase } from "@/lib/supabase";
 
 export const getDashboardBranch = async (month, year) => {
+    const effectiveDay = await getEffectiveDay(month, year);
+
     const { data, error } = await supabase.rpc("dashboard_branch", {
         p_month: month,
         p_year: year,
+        p_effective_day: effectiveDay,
     });
 
     if (error) throw error;
 
-    return data;
+    return { data, efective_day: effectiveDay };
 };
 
 export const getDashboardArea = async (month, year) => {
@@ -20,4 +23,24 @@ export const getDashboardArea = async (month, year) => {
     if (error) throw error;
 
     return data;
+};
+
+
+const getEffectiveDay = async (month, year) => {
+    const { data, error } = await supabase
+        .from("effective_day")
+        .select("total_day")
+        .eq("month", month)
+        .eq("year", year)
+        .single();
+
+    if (error) throw error;
+
+    if (!data) {
+        throw new Error(
+            `Effective day belum dikonfigurasi untuk ${month}/${year}`
+        );
+    }
+
+    return data.total_day;
 };

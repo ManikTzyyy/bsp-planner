@@ -19,7 +19,7 @@ export async function GET(req) {
 
         return NextResponse.json({
             success: true,
-            data,
+            ...data,
         });
     } catch (err) {
         return NextResponse.json(

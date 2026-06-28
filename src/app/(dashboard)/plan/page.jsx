@@ -164,28 +164,36 @@ export default function Plan() {
 
                     <div className="flex flex-col gap-2 text-sm text-stone-500">
                         <span>Filter by Date</span>
-                        <div className="flex gap-1 items-center">
-                            <input
-                                type="date"
-                                value={startDate}
-                                onChange={(e) => {
-                                    setStartDate(e.target.value);
-                                    setPage(1);
-                                }}
-                                onClick={(e) => e.target.showPicker()}
-                                className="w-full px-2 py-1 text-stone-900 text-base rounded-md border border-stone-200 bg-white"
-                            />
-                            <span className="text-xs text-stone-400">to</span>
-                            <input
-                                type="date"
-                                value={endDate}
-                                onChange={(e) => {
-                                    setEndDate(e.target.value);
-                                    setPage(1);
-                                }}
-                                onClick={(e) => e.target.showPicker()}
-                                className="w-full px-2 py-1 text-stone-900 text-base rounded-md border border-stone-200 bg-white"
-                            />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                            <div className="">
+                                <label htmlFor="">Start date</label>
+                                <input
+                                    type="date"
+                                    value={startDate}
+                                    placeholder="enter start date"
+                                    onChange={(e) => {
+                                        setStartDate(e.target.value);
+                                        setPage(1);
+                                    }}
+                                    onClick={(e) => e.target.showPicker()}
+                                    className="w-full px-2 py-1 text-stone-900 text-base rounded-md border border-stone-200 bg-white"
+                                />
+                            </div>
+                            <div className="">
+                                <label htmlFor="">End Date</label>
+                                <input
+                                    type="date"
+                                    value={endDate}
+                                    placeholder="enter end date"
+                                    onChange={(e) => {
+                                        setEndDate(e.target.value);
+                                        setPage(1);
+                                    }}
+                                    onClick={(e) => e.target.showPicker()}
+                                    className="w-full px-2 py-1 text-stone-900 text-base rounded-md border border-stone-200 bg-white"
+                                />
+
+                            </div>
 
                         </div>
                     </div>

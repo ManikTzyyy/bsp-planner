@@ -51,9 +51,15 @@ export const getPlanById = async (id) => {
 
     const totalPending = totalTask - totalCompleted - totalUncompleted;
 
-    const totalPoints =
-        (totalCompleted * 10) +
-        (totalUncompleted * 5);
+    let totalPoints = 0;
+
+    if (totalTask > 0) {
+        if (totalCompleted === totalTask) {
+            totalPoints = 10;
+        } else if (totalUncompleted > 0) {
+            totalPoints = 5;
+        }
+    }
 
     if (error) throw error;
 
@@ -126,7 +132,7 @@ export const getAllPlans = async ({
         finalQuery = finalQuery.gte("date", startDate);
     }
     if (endDate) {
-        finalQuery = finalQuery.lte("date", endDate);   
+        finalQuery = finalQuery.lte("date", endDate);
     }
 
 
