@@ -44,6 +44,9 @@ export default function PlanItemCard({ id_user_plan, item, isExpanded, onToggle,
 
     const [isLoading, setIsLoading] = useState(false)
 
+    const [savingBeforeNote, setSavingBeforeNote] = useState(false)
+    const [savingAfterNote, setSavingAfterNote] = useState(false)
+
 
     const imageBefore = item.images?.find(img => img.image_type === 'before') || null
     const imageAfter = item.images?.find(img => img.image_type === 'after') || null
@@ -207,6 +210,57 @@ export default function PlanItemCard({ id_user_plan, item, isExpanded, onToggle,
         }
     }
 
+    const handleSaveNote = async (type, note) => {
+        if (type === "before") {
+            setSavingBeforeNote(true)
+        } else {
+            setSavingAfterNote(true)
+        }
+
+        try {
+            const body = {
+                id: item.id,
+                id_user_plan,
+            }
+
+            if (type === "before") {
+                body.before_note = note
+            } else {
+                body.after_note = note
+            }
+
+            const res = await fetch(`/api/plan/item/${item.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body),
+            })
+
+            const data = await res.json()
+
+            if (!res.ok || !data.success) {
+                throw new Error(data.message || "Failed to save note")
+            }
+
+            toast.success(`${type} note saved successfully`)
+
+            if (onRefresh) {
+                await onRefresh()
+            }
+        } catch (err) {
+            toast.error("Failed to save note", {
+                description: err.message,
+            })
+        } finally {
+            if (type === "before") {
+                setSavingBeforeNote(false)
+            } else {
+                setSavingAfterNote(false)
+            }
+        }
+    }
+
 
     return (
         <div
@@ -301,8 +355,11 @@ export default function PlanItemCard({ id_user_plan, item, isExpanded, onToggle,
                                             onUpload={handlePhotoUpload}
                                             onCancel={handleCancelTemp}
                                             onDelete={handlePhotoDelete}
+                                            onSave={handleSaveNote}
                                             itemId={item.id}
                                             showAction={showAction}
+                                            isLoading={savingBeforeNote}
+                                            note={item.before_note}
                                         />
 
                                         <PhotoSelector
@@ -314,8 +371,12 @@ export default function PlanItemCard({ id_user_plan, item, isExpanded, onToggle,
                                             onUpload={handlePhotoUpload}
                                             onCancel={handleCancelTemp}
                                             onDelete={handlePhotoDelete}
+                                            onSave={handleSaveNote}
                                             itemId={item.id}
                                             showAction={showAction}
+                                            isLoading={savingAfterNote}
+                                            note={item.after_note}
+
                                         />
                                     </div>
 
